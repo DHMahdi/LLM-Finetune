@@ -1,0 +1,73 @@
+base_model: mistralai/Mistral-7B-v0.1
+
+load_in_8bit: false
+load_in_4bit: false
+#use_nested_quant: false
+#bnb_4bit_compute_dtype: bfloat16
+#bnb_4bit_quant_type: nf4
+strict: false
+
+datasets:
+  # Update path to point to the new dataset for sentiment analysis
+  - path: data.jsonl
+    ds_type: json
+    type:
+      # JSONL file contains InputText and SentimentLabel fields.
+      # Map these to instruction, input, and output for sentiment analysis.
+      field_instruction: InputText
+      field_input: null
+      field_output: SentimentLabel
+      # Format is used by axolotl to generate the sentiment analysis prompt.
+      format: |-
+        [INST] Analyze the sentiment of the following text:
+        {instruction} [/INST]
+        
+tokens:
+  - "[INST]"
+  - " [/INST]"
+
+dataset_prepared_path: last_run_prepared
+val_set_size: 0.05
+output_dir: ./lora-out
+
+sequence_len: 512 
+sample_packing: true
+pad_to_sequence_len: true
+
+adapter: lora
+lora_model_dir:
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+lora_modules_to_save: 
+  - embed_tokens
+  - lm_head
+
+gradient_accumulation_steps: 4
+micro_batch_size: 8
+num_epochs: 2
+optimizer: adamw_torch
+lr_scheduler: cosine
+learning_rate: 0.0004
+
+bf16: auto
+fp16: false
+tf32: false
+
+gradient_checkpointing: true
+flash_attention: true
+
+warmup_steps: 500
+save_steps: 500
+logging_steps: 100
+
+deepspeed: /workspace/axolotl/deepspeed_configs/zero3_bf16.json

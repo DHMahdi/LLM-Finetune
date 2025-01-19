@@ -1,0 +1,10 @@
+modal
+torch
+datasets
+transformers
+streamlit
+hf_transfer
+peft
+axolotl
+accelerate
+huggingface_hub
