@@ -11,7 +11,7 @@
 
 ## Set up modal
 
-- Setup modal account
+- Grant modal access
 ```
 python -m modal setup
 ```
@@ -194,6 +194,7 @@ You can adjust these hyperparameters in the config file (mistral7b.yml)
 - ALLOW_WANDB: Enable/disable Weights & Biases logging (default: "false")
 
 # Demo
+The text entered is "ma7leh el film", which translates as "the movie was good".
 
 <div align="center">
   <img src="streamlit.png" alt="Chatbot's UI">
